@@ -885,9 +885,54 @@ margin-bottom: 6px;
       return;
     }
 
-    // Ici tu brancheras ton service (Mailchimp, ConvertKit, Brevo, etc.)
-    console.log('Email inscrit :', email);
+   const PUBLIC_KEY = "QWgzyd";
+const LIST_ID = "TpCKEi";
 
+fetch(`https://a.klaviyo.com/client/subscriptions/?company_id=${PUBLIC_KEY}`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "revision": "2023-10-15"
+  },
+  body: JSON.stringify({
+    data: {
+      type: "subscription",
+      attributes: {
+        profile: {
+          data: {
+            type: "profile",
+            attributes: {
+              email: email
+            }
+          }
+        }
+      },
+      relationships: {
+        list: {
+          data: {
+            type: "list",
+            id: LIST_ID
+          }
+        }
+      }
+    }
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error("Erreur Klaviyo");
+  }
+
+  input.value = "";
+  msg.classList.add("show");
+
+  setTimeout(() => {
+    msg.classList.remove("show");
+  }, 8000);
+})
+.catch(error => {
+  console.error(error);
+});
     input.value = '';
     msg.classList.add('show');
 

@@ -892,7 +892,7 @@ fetch(`https://a.klaviyo.com/client/subscriptions/?company_id=${PUBLIC_KEY}`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "revision": "2023-10-15"
+    "revision": "2024-06-15"
   },
   body: JSON.stringify({
     data: {
@@ -902,10 +902,18 @@ fetch(`https://a.klaviyo.com/client/subscriptions/?company_id=${PUBLIC_KEY}`, {
           data: {
             type: "profile",
             attributes: {
-              email: email
+              email: email,
+              subscriptions: {
+                email: {
+                  marketing: {
+                    consent: "SUBSCRIBED"
+                  }
+                }
+              }
             }
           }
-        }
+        },
+        custom_source: "FIAT LUX MORNING Landing Page"
       },
       relationships: {
         list: {
@@ -918,32 +926,16 @@ fetch(`https://a.klaviyo.com/client/subscriptions/?company_id=${PUBLIC_KEY}`, {
     }
   })
 })
-.then(response => {
-  if (!response.ok) {
-    console.log("Status:", response.status);
-return response.text().then(text => console.log("Réponse Klaviyo:", text);
-  }
+.then(async response => {
+  const text = await response.text();
+  console.log("Klaviyo:", response.status, text);
+
+  if (!response.ok) throw new Error(text);
 
   input.value = "";
   msg.classList.add("show");
-
-  setTimeout(() => {
-    msg.classList.remove("show");
-  }, 8000);
+  setTimeout(() => msg.classList.remove("show"), 8000);
 })
 .catch(error => {
-  console.error(error);
-});
-    input.value = '';
-    msg.classList.add('show');
-
-    setTimeout(() => msg.classList.remove('show'), 8000);
-  }
-</script>
-
-</body>
-</html>
-
-
-
-</html>
+  console.error("Erreur Klaviyo:", error);
+}):

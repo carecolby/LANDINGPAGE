@@ -281,61 +281,62 @@ font-size: 22px; margin-bottom: 18px;
 
 /* ── THÉOLOGIQUE ── */
 .theo-wrap {
-background: #0C1020;
-border-top: 1px solid var(–border); border-bottom: 1px solid var(–border);
+background: #07090F;
+border-top: 1px solid #2A3555; border-bottom: 1px solid #2A3555;
 padding: 80px 24px;
 }
 .theo-box {
 max-width: 760px; margin: 0 auto;
-background: linear-gradient(140deg, #111828, #162035);
-border: 1px solid var(–gold-b); border-radius: 24px;
+background: #0D1120;
+border: 2px solid rgba(239,68,68,0.5); border-radius: 24px;
 padding: 48px 52px; position: relative; overflow: hidden;
 }
 .theo-box::before {
 content: ‘✝’; position: absolute; top: -10px; right: 28px;
-font-size: 140px; color: var(–gold); opacity: 0.06;
+font-size: 140px; color: #EF4444; opacity: 0.08;
 font-family: serif; line-height: 1; pointer-events: none;
 }
 .theo-badge {
 display: inline-flex; align-items: center; gap: 8px;
-background: rgba(232,168,32,0.12); border: 1px solid var(–gold-b);
+background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.5);
 border-radius: 100px; padding: 5px 15px;
-font-size: 10px; font-weight: 700; color: var(–gold);
+font-size: 10px; font-weight: 700; color: #FF6B6B;
 letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 24px;
 }
 .theo-title {
 font-family: ‘Cormorant Garamond’, serif;
 font-size: clamp(26px, 4vw, 40px); font-weight: 700;
-line-height: 1.2; margin-bottom: 22px; color: #EEF2FF;
+line-height: 1.2; margin-bottom: 22px; color: #FFFFFF;
 }
 .theo-title em {
-font-style: italic;
-background: linear-gradient(135deg, var(–gold-l), var(–gold));
--webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+font-style: italic; font-weight: 700;
+color: #FF6B6B;
+-webkit-text-fill-color: #FF6B6B;
+background: none;
 }
-.theo-body { font-size: 14px; color: #8895B3; line-height: 1.9; margin-bottom: 30px; }
-.theo-body strong { color: #EEF2FF; font-weight: 600; }
-.theo-body em { font-style: italic; color: #D4C5A0; -webkit-text-fill-color: #D4C5A0; }
+.theo-body { font-size: 14px; color: #A0AEC0; line-height: 1.9; margin-bottom: 30px; }
+.theo-body strong { color: #FFFFFF; font-weight: 700; }
+.theo-body em { font-style: italic; color: #FCA5A5; -webkit-text-fill-color: #FCA5A5; background: none; }
 
-.theo-divider { height: 1px; margin: 28px 0; background: linear-gradient(90deg, transparent, var(–gold-b), transparent); }
+.theo-divider { height: 1px; margin: 28px 0; background: linear-gradient(90deg, transparent, rgba(239,68,68,0.5), transparent); }
 
 .theo-pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 30px; }
 @media (max-width: 640px) { .theo-pillars { grid-template-columns: 1fr; } }
 
 .pillar {
-background: rgba(232,168,32,0.07); border: 1px solid rgba(232,168,32,0.22);
-border-radius: 15px; padding: 18px 18px;
+background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.35);
+border-radius: 15px; padding: 18px;
 }
 .pillar-icon { font-size: 22px; margin-bottom: 10px; }
-.pillar-title { font-size: 11px; font-weight: 700; color: var(–gold); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
-.pillar-text { font-size: 12px; color: #8895B3; line-height: 1.65; }
+.pillar-title { font-size: 11px; font-weight: 700; color: #FF6B6B; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+.pillar-text { font-size: 12px; color: #A0AEC0; line-height: 1.65; }
 
 .theo-verse {
-background: rgba(255,255,255,0.04); border-left: 3px solid var(–gold);
+background: rgba(239,68,68,0.07); border-left: 3px solid #EF4444;
 border-radius: 0 13px 13px 0; padding: 18px 22px;
 }
-.theo-verse p { font-family: ‘Cormorant Garamond’, serif; font-size: 16px; font-style: italic; color: #EEF2FF; line-height: 1.65; margin-bottom: 8px; }
-.theo-verse span { font-size: 11px; font-weight: 700; color: var(–gold); letter-spacing: 0.08em; text-transform: uppercase; }
+.theo-verse p { font-family: ‘Cormorant Garamond’, serif; font-size: 16px; font-style: italic; color: #FFFFFF; line-height: 1.65; margin-bottom: 8px; }
+.theo-verse span { font-size: 11px; font-weight: 700; color: #FF6B6B; letter-spacing: 0.08em; text-transform: uppercase; }
 
 @media (max-width: 640px) { .theo-box { padding: 30px 24px; } }
 

@@ -1,2853 +1,763 @@
 <!DOCTYPE html>
-<html lang="fr">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Prends Autorité — Wireframe</title>
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-
-<style>
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-
-    background: #060910;
-
-    min-height: 100vh;
-
-    display: flex;
-
-    align-items: flex-start;
-
-    justify-content: center;
-
-    padding: 30px 16px;
-
-    font-family: 'DM Sans', sans-serif;
-
-  }
-
-  ::-webkit-scrollbar { width: 0; }
-
-</style>
-
-</head>
-
-<body>
-
-<div id="root"></div>
-
-<script type="text/babel">
-
-const { useState, useEffect } = React;
-
-
-
-const C = {
-
-night: “#0B0F1F”,
-
-deep: “#0D1120”,
-
-surface: “#1A2035”,
-
-surfaceHigh: “#222B42”,
-
-border: “#2A3555”,
-
-gold: “#F0B429”,
-
-goldMuted: “rgba(240,180,41,0.15)”,
-
-goldBorder: “rgba(240,180,41,0.3)”,
-
-rose: “#F472B6”,
-
-roseMuted: “rgba(244,114,182,0.12)”,
-
-roseBorder: “rgba(244,114,182,0.3)”,
-
-sky: “#38BDF8”,
-
-skyMuted: “rgba(56,189,248,0.1)”,
-
-text: “#F0F4FF”,
-
-textMuted: “#8895B3”,
-
-textFaint: “#4A5580”,
-
-red: “#EF4444”,
-
-green: “#22C55E”,
-
-};
-
-
-
-const SCREENS = [
-
-{ id: “home”, label: “Accueil”, icon: “🌅” },
-
-{ id: “alarm”, label: “Alarmes”, icon: “⏰” },
-
-{ id: “ritual”, label: “Rituel”, icon: “🙏” },
-
-{ id: “declarations”, label: “Parole”, icon: “📖” },
-
-{ id: “journal”, label: “Journal”, icon: “✍️” },
-
-];
-
-
-
-function Stars() {
-
-const stars = Array.from({length: 25}, (_, i) => ({
-
-left: (i * 37 + 11) % 100,
-
-top: (i * 23 + 7) % 55,
-
-size: i % 4 === 0 ? 3 : 2,
-
-op: 0.15 + (i % 5) * 0.08,
-
-}));
-
-return (
-
-<div style={{position:“absolute”,inset:0,pointerEvents:“none”,overflow:“hidden”}}>
-
-{stars.map((s,i) => (
-
-<div key={i} style={{
-
-position:“absolute”, left:`${s.left}%`, top:`${s.top}%`,
-
-width:s.size, height:s.size, borderRadius:“50%”,
-
-background:C.gold, opacity:s.op,
-
-}}/>
-
-))}
-
-</div>
-
-);
-
-}
-
-
-
-function VerseCard({reference, text, theme}) {
-
-return (
-
-<div style={{
-
-background:`linear-gradient(135deg,${C.surface},${C.surfaceHigh})`,
-
-border:`1px solid ${C.goldBorder}`,
-
-borderRadius:16, padding:“18px 18px”,
-
-position:“relative”, overflow:“hidden”,
-
-}}>
-
-<div style={{
-
-position:“absolute”,top:-8,right:8,
-
-fontSize:70,opacity:0.06,lineHeight:1,
-
-color:C.gold,fontFamily:“serif”,
-
-}}>”</div>
-
-<div style={{fontSize:10,fontWeight:700,color:C.gold,letterSpacing:“0.12em”,textTransform:“uppercase”,marginBottom:6}}>{reference}</div>
-
-<div style={{fontSize:13,lineHeight:1.7,color:C.text,fontStyle:“italic”}}>{text}</div>
-
-{theme && (
-
-<div style={{
-
-marginTop:10,display:“inline-block”,
-
-background:C.goldMuted,border:`1px solid ${C.goldBorder}`,
-
-borderRadius:100,padding:“2px 10px”,fontSize:10,color:C.gold,fontWeight:600,
-
-}}>{theme}</div>
-
-)}
-
-</div>
-
-);
-
-}
-
-
-
-function HomeScreen() {
-
-return (
-
-<div style={{flex:1,overflowY:“auto”,position:“relative”}}>
-
-<Stars/>
-
-<div style={{
-
-position:“absolute”,inset:0,pointerEvents:“none”,
-
-background:`radial-gradient(ellipse 90% 40% at 50% 100%, rgba(244,114,182,0.2) 0%, transparent 60%), radial-gradient(ellipse 60% 25% at 50% 90%, rgba(240,180,41,0.12) 0%, transparent 50%)`,
-
-}}/>
-
-
-
-```
-
-  {/* Hero soleil */}
-
-  <div style={{position:"relative",zIndex:1,padding:"28px 20px 20px",textAlign:"center"}}>
-
-    <div style={{position:"relative",width:110,height:110,margin:"0 auto 16px"}}>
-
-      {[76,94,110].map((s,i)=>(
-
-        <div key={i} style={{
-
-          position:"absolute",top:"50%",left:"50%",
-
-          transform:"translate(-50%,-50%)",
-
-          width:s,height:s,borderRadius:"50%",
-
-          border:`1px solid ${C.gold}`,opacity:0.08+i*0.05,
-
-        }}/>
-
-      ))}
-
-      <div style={{
-
-        position:"absolute",bottom:8,left:-28,right:-28,height:1,
-
-        background:`linear-gradient(90deg,transparent,${C.rose},${C.gold},${C.rose},transparent)`,
-
-        opacity:0.7,
-
-      }}/>
-
-      <div style={{
-
-        position:"absolute",top:"50%",left:"50%",
-
-        transform:"translate(-50%,-50%)",
-
-        width:52,height:52,borderRadius:"50%",
-
-        background:`radial-gradient(circle, #FFE566, ${C.gold})`,
-
-        boxShadow:`0 0 28px ${C.gold}55,0 0 56px ${C.gold}22`,
-
-      }}/>
-
-    </div>
-
-
-
-    <div style={{fontSize:11,color:C.rose,fontWeight:700,marginBottom:3,letterSpacing:"0.08em"}}>LEVER DU SOLEIL</div>
-
-    <div style={{fontSize:52,fontWeight:800,color:C.gold,letterSpacing:"-2px",lineHeight:1}}>06:42</div>
-
-    <div style={{fontSize:12,color:C.textMuted,marginTop:5}}>dans 47 minutes · Paris, France</div>
-
-
-
-    <div style={{
-
-      display:"inline-flex",alignItems:"center",gap:8,
-
-      background:C.surfaceHigh,border:`1px solid ${C.border}`,
-
-      borderRadius:100,padding:"7px 14px",marginTop:14,
-
-    }}>
-
-      <span style={{fontSize:14}}>🧭</span>
-
-      <span style={{fontSize:12,color:C.text}}>Direction Est · 78° azimut</span>
-
-    </div>
-
-  </div>
-
-
-
-  {/* Verset */}
-
-  <div style={{padding:"0 18px 14px",position:"relative",zIndex:1}}>
-
-    <div style={{fontSize:11,color:C.textMuted,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8}}>Parole du jour</div>
-
-    <VerseCard
-
-      reference="Psaume 119 : 147-148"
-
-      text="Je devance l'aurore et je crie ; j'espère en Tes promesses. Je devance les veilles et j'ouvre les yeux, pour méditer Ta Parole."
-
-      theme="Devancer l'aurore"
-
-    />
-
-  </div>
-
-
-
-  {/* Streak */}
-
-  <div style={{
-
-    margin:"0 18px 14px",
-
-    background:C.surface,border:`1px solid ${C.border}`,
-
-    borderRadius:16,padding:"14px 16px",
-
-    display:"flex",alignItems:"center",justifyContent:"space-between",
-
-    position:"relative",zIndex:1,
-
-  }}>
-
-    <div>
-
-      <div style={{fontSize:11,color:C.textMuted,marginBottom:3}}>Ta flamme spirituelle</div>
-
-      <div style={{fontSize:26,fontWeight:800,color:C.gold}}>🔥 12 jours</div>
-
-      <div style={{fontSize:11,color:C.textMuted,marginTop:1}}>consécutifs à l'aurore</div>
-
-    </div>
-
-    <div style={{display:"flex",gap:3}}>
-
-      {["L","M","M","J","V","S","D"].map((d,i)=>(
-
-        <div key={i} style={{
-
-          width:26,height:26,borderRadius:7,
-
-          background:i<5?C.goldMuted:C.surfaceHigh,
-
-          border:`1px solid ${i<5?C.goldBorder:C.border}`,
-
-          display:"flex",alignItems:"center",justifyContent:"center",
-
-          fontSize:9,color:i<5?C.gold:C.textFaint,fontWeight:700,
-
-        }}>{i<5?"✓":d}</div>
-
-      ))}
-
-    </div>
-
-  </div>
-
-
-
-  {/* CTA */}
-
-  <div style={{padding:"0 18px 24px",position:"relative",zIndex:1}}>
-
-    <button style={{
-
-      width:"100%",
-
-      background:`linear-gradient(135deg,${C.rose}22,${C.gold}22)`,
-
-      border:`1px solid ${C.goldBorder}`,
-
-      borderRadius:14,padding:"16px",
-
-      color:C.gold,fontSize:15,fontWeight:700,cursor:"pointer",
-
-      display:"flex",alignItems:"center",justifyContent:"center",gap:10,
-
-    }}>🙏 Commencer le rituel du matin</button>
-
-  </div>
-
-</div>
-
-```
-
-
-
-);
-
-}
-
-
-
-function AlarmScreen() {
-
-const [alarms, setAlarms] = useState([true, true, false]);
-
-const toggle = i => setAlarms(a => a.map((v,j)=>j===i?!v:v));
-
-const data = [
-
-{time:“05:42”,label:“🔴 Renverser — 1h avant”,color:C.red,verse:’“As-tu commandé au matin ? Pour que les méchants en soient secoués.” — Job 38:12’},
-
-{time:“06:12”,label:“🟡 Préparer — 30 min avant”,color:C.gold,verse:’“La mort et la vie sont au pouvoir de la langue.” — Proverbes 18:21’},
-
-{time:“06:27”,label:“🟢 Accueillir — 15 min avant”,color:C.green,verse:’“Je devance l'aurore et je crie.” — Psaume 119:147’},
-
-];
-
-return (
-
-<div style={{flex:1,overflowY:“auto”,padding:“22px 18px”}}>
-
-<div style={{fontSize:17,fontWeight:800,color:C.text,marginBottom:3}}>Mes alarmes</div>
-
-<div style={{fontSize:12,color:C.textMuted,marginBottom:20}}>
-
-Lever du soleil aujourd’hui à <span style={{color:C.gold}}>06:42</span> — s’ajuste automatiquement
-
-</div>
-
-{data.map((d,i)=>(
-
-<div key={i} style={{
-
-background:alarms[i]?C.surfaceHigh:C.surface,
-
-border:`1px solid ${alarms[i]?d.color:C.border}`,
-
-borderRadius:16,padding:“16px”,marginBottom:12,
-
-boxShadow:alarms[i]?`0 0 18px ${d.color}18`:“none”,
-
-transition:“all 0.3s”,
-
-}}>
-
-<div style={{display:“flex”,alignItems:“center”,justifyContent:“space-between”,marginBottom:8}}>
-
-<div>
-
-<div style={{fontSize:11,color:C.textMuted,fontWeight:600,textTransform:“uppercase”,letterSpacing:“0.07em”,marginBottom:3}}>{d.label}</div>
-
-<div style={{fontSize:30,fontWeight:800,color:alarms[i]?d.color:C.textMuted,letterSpacing:”-1px”}}>{d.time}</div>
-
-</div>
-
-<div onClick={()=>toggle(i)} style={{
-
-width:50,height:28,borderRadius:14,cursor:“pointer”,
-
-background:alarms[i]?d.color:C.surfaceHigh,
-
-border:`1px solid ${alarms[i]?d.color:C.border}`,
-
-position:“relative”,transition:“all 0.3s”,
-
-}}>
-
-<div style={{
-
-position:“absolute”,top:4,
-
-left:alarms[i]?27:4,
-
-width:18,height:18,borderRadius:“50%”,
-
-background:”#fff”,transition:“left 0.3s”,
-
-boxShadow:“0 1px 4px rgba(0,0,0,0.4)”,
-
-}}/>
-
-</div>
-
-</div>
-
-<div style={{fontSize:11,color:C.textMuted,fontStyle:“italic”,borderTop:`1px solid ${C.border}`,paddingTop:8}}>{d.verse}</div>
-
-</div>
-
-))}
-
-<div style={{
-
-background:C.skyMuted,border:`1px solid rgba(56,189,248,0.2)`,
-
-borderRadius:12,padding:“12px 14px”,marginTop:4,
-
-fontSize:12,color:C.sky,lineHeight:1.6,
-
-}}>
-
-💡 Tes alarmes s’adaptent chaque jour selon l’heure exacte du lever à ta position GPS.
-
-</div>
-
-</div>
-
-);
-
-}
-
-
-
-function RitualScreen() {
-
-const [step, setStep] = useState(0);
-
-const steps = [
-
-{icon:“🔴”,title:“Prière de renversement”,sub:“Job 38:12-13 · 5 minutes”,color:C.red,
-
-text:“Seigneur, je commande au matin de ce jour. Tout ce qui a été semé contre moi dans la nuit est renversé par Ta puissance. Les œuvres des ténèbres sont secouées et réduites à néant au nom de Jésus.”,
-
-btn:“Lancer la prière guidée”},
-
-{icon:“🟡”,title:“Déclarations sur ma journée”,sub:“Proverbes 18:21 · 3 minutes”,color:C.gold,
-
-text:“Ouvre ta bouche et déclare sur ta journée. La vie est au pouvoir de ta langue — prophétise du positif sur chaque domaine de ta vie aujourd’hui.”,
-
-btn:“Voir mes déclarations”},
-
-{icon:“🟢”,title:“Accueillir les premiers rayons”,sub:“Psaume 119:147 · 2 minutes”,color:C.green,
-
-text:“Tourne-toi vers l’Est (78°). Laisse les premiers rayons du soleil toucher ton visage. Médite la grâce nouvelle de ce matin.”,
-
-btn:“Ouvrir la boussole”},
-
-{icon:“✍️”,title:“Journal de l’aube”,sub:“Gratitude · 2 minutes”,color:C.sky,
-
-text:“Qu’est-ce que tu déclares sur ta vie aujourd’hui ? Écris une phrase qui restera gravée dans ce matin.”,
-
-btn:“Écrire ma déclaration”},
-
-];
-
-return (
-
-<div style={{flex:1,overflowY:“auto”,padding:“22px 18px”}}>
-
-<div style={{fontSize:17,fontWeight:800,color:C.text,marginBottom:3}}>Rituel du matin</div>
-
-<div style={{fontSize:12,color:C.textMuted,marginBottom:14}}>
-
-Lever dans <span style={{color:C.gold}}>47 min</span> · 4 étapes · ~12 min
-
-</div>
-
-<div style={{height:4,background:C.surfaceHigh,borderRadius:4,marginBottom:20,overflow:“hidden”}}>
-
-<div style={{height:“100%”,width:`${(step/steps.length)*100}%`,background:`linear-gradient(90deg,${C.rose},${C.gold})`,borderRadius:4,transition:“width 0.4s”}}/>
-
-</div>
-
-{steps.map((s,i)=>(
-
-<div key={i} onClick={()=>setStep(i)} style={{
-
-background:step===i?C.surfaceHigh:C.surface,
-
-border:`1px solid ${step===i?s.color:C.border}`,
-
-borderRadius:16,padding:“16px”,marginBottom:12,cursor:“pointer”,
-
-boxShadow:step===i?`0 0 18px ${s.color}18`:“none”,
-
-transition:“all 0.2s”,
-
-}}>
-
-<div style={{display:“flex”,alignItems:“flex-start”,gap:12}}>
-
-<div style={{
-
-width:38,height:38,borderRadius:11,flexShrink:0,
-
-background:step===i?`${s.color}22`:C.surfaceHigh,
-
-border:`1px solid ${step===i?s.color:C.border}`,
-
-display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:18,
-
-}}>{s.icon}</div>
-
-<div style={{flex:1}}>
-
-<div style={{fontWeight:700,fontSize:13,color:step===i?C.text:C.textMuted}}>{s.title}</div>
-
-<div style={{fontSize:11,color:C.textFaint,marginTop:2}}>{s.sub}</div>
-
-{step===i&&(
-
-<div style={{marginTop:12}}>
-
-<div style={{fontSize:13,color:C.textMuted,lineHeight:1.7,fontStyle:“italic”,marginBottom:12}}>{s.text}</div>
-
-<button style={{
-
-background:`${s.color}22`,border:`1px solid ${s.color}55`,
-
-color:s.color,borderRadius:10,padding:“9px 14px”,
-
-fontSize:12,fontWeight:700,cursor:“pointer”,width:“100%”,
-
-}}>{s.btn} →</button>
-
-</div>
-
-)}
-
-</div>
-
-<div style={{
-
-width:22,height:22,borderRadius:“50%”,flexShrink:0,
-
-background:i<step?C.green:“transparent”,
-
-border:`1px solid ${i<step?C.green:C.border}`,
-
-display:“flex”,alignItems:“center”,justifyContent:“center”,
-
-fontSize:10,color:”#fff”,fontWeight:700,
-
-}}>{i<step?“✓”:i+1}</div>
-
-</div>
-
-</div>
-
-))}
-
-</div>
-
-);
-
-}
-
-
-
-function DeclarationsScreen() {
-
-const decls = [
-
-{text:“Je déclare que cette journée est bénie et que toute œuvre de mes mains prospère.”,ref:“Deut. 28:12”},
-
-{text:“Je proclame que la faveur de Dieu m’accompagne partout où je vais aujourd’hui.”,ref:“Ps. 5:12”},
-
-{text:“Je déclare que ma famille est protégée par le sang de Jésus-Christ.”,ref:“Ex. 12:13”},
-
-{text:“Je prophétise l’abondance sur mes finances et mes projets.”,ref:“Phil. 4:19”},
-
-{text:“Je déclare que ma santé est restaurée et que la maladie n’a aucun pouvoir sur moi.”,ref:“És. 53:5”},
-
-];
-
-return (
-
-<div style={{flex:1,overflowY:“auto”,padding:“22px 18px”}}>
-
-<div style={{fontSize:17,fontWeight:800,color:C.text,marginBottom:3}}>Mes déclarations</div>
-
-<div style={{fontSize:12,color:C.textMuted,marginBottom:14}}>À lire à voix haute chaque matin — Proverbes 18:21</div>
-
-<VerseCard
-
-reference="Proverbes 18:20-21"
-
-text="La mort et la vie sont au pouvoir de la langue ; quiconque l'aime en mangera les fruits."
-
-theme="Puissance de la déclaration"
-
-/>
-
-<div style={{marginTop:16}}>
-
-{decls.map((d,i)=>(
-
-<div key={i} style={{
-
-background:C.surface,border:`1px solid ${C.border}`,
-
-borderRadius:14,padding:“14px”,marginBottom:10,display:“flex”,gap:12,
-
-}}>
-
-<div style={{
-
-width:30,height:30,borderRadius:“50%”,flexShrink:0,
-
-background:C.goldMuted,border:`1px solid ${C.goldBorder}`,
-
-display:“flex”,alignItems:“center”,justifyContent:“center”,
-
-fontSize:12,fontWeight:800,color:C.gold,
-
-}}>{i+1}</div>
-
-<div>
-
-<div style={{fontSize:13,color:C.text,lineHeight:1.6,fontStyle:“italic”}}>”{d.text}”</div>
-
-<div style={{fontSize:10,color:C.gold,marginTop:5,fontWeight:700}}>{d.ref}</div>
-
-</div>
-
-</div>
-
-))}
-
-</div>
-
-<button style={{
-
-width:“100%”,marginTop:4,
-
-background:C.goldMuted,border:`1px dashed ${C.goldBorder}`,
-
-borderRadius:14,padding:“13px”,
-
-color:C.gold,fontSize:13,fontWeight:700,cursor:“pointer”,
-
-}}>＋ Ajouter une déclaration personnelle</button>
-
-</div>
-
-);
-
-}
-
-
-
-function JournalScreen() {
-
-const entries = [
-
-{date:“Jeu 17 avr.”,time:“05:58”,text:“Aujourd’hui je déclare que ma promotion est décidée dans les cieux.”,lever:“06:42”},
-
-{date:“Mer 16 avr.”,time:“06:01”,text:“Je prophétise la réconciliation dans ma famille. Dieu est au milieu de nous.”,lever:“06:43”},
-
-{date:“Mar 15 avr.”,time:“05:55”,text:“Ce matin j’ai vu le soleil se lever. Sa gloire remplit toute la terre.”,lever:“06:44”},
-
-];
-
-return (
-
-<div style={{flex:1,overflowY:“auto”,padding:“22px 18px”}}>
-
-<div style={{fontSize:17,fontWeight:800,color:C.text,marginBottom:3}}>Journal de l’aube</div>
-
-<div style={{fontSize:12,color:C.textMuted,marginBottom:18}}>{entries.length} matins gravés dans l’éternité</div>
-
-<div style={{
-
-background:`linear-gradient(135deg,${C.surface},${C.surfaceHigh})`,
-
-border:`1px solid ${C.roseBorder}`,
-
-borderRadius:16,padding:“16px”,marginBottom:18,
-
-boxShadow:`0 0 24px ${C.rose}0D`,
-
-}}>
-
-<div style={{fontSize:11,color:C.rose,fontWeight:700,marginBottom:10,textTransform:“uppercase”,letterSpacing:“0.08em”}}>Ce matin — 17 avril</div>
-
-<div style={{
-
-fontSize:13,color:C.textFaint,fontStyle:“italic”,
-
-padding:“12px”,background:C.night,borderRadius:10,
-
-border:`1px solid ${C.border}`,minHeight:70,lineHeight:1.7,
-
-}}>Aujourd’hui je déclare que…</div>
-
-<button style={{
-
-width:“100%”,marginTop:12,
-
-background:`linear-gradient(135deg,${C.rose}22,${C.gold}18)`,
-
-border:`1px solid ${C.roseBorder}`,
-
-borderRadius:10,padding:“11px”,
-
-color:C.rose,fontSize:13,fontWeight:700,cursor:“pointer”,
-
-}}>✍️ Écrire ma déclaration du matin</button>
-
-</div>
-
-<div style={{fontSize:11,color:C.textMuted,fontWeight:700,textTransform:“uppercase”,letterSpacing:“0.1em”,marginBottom:12}}>Mes matins précédents</div>
-
-{entries.map((e,i)=>(
-
-<div key={i} style={{
-
-background:C.surface,border:`1px solid ${C.border}`,
-
-borderRadius:14,padding:“14px”,marginBottom:10,
-
-}}>
-
-<div style={{display:“flex”,justifyContent:“space-between”,marginBottom:7}}>
-
-<div style={{fontSize:11,fontWeight:700,color:C.gold}}>{e.date} · {e.time}</div>
-
-<div style={{fontSize:10,color:C.textFaint}}>🌅 {e.lever}</div>
-
-</div>
-
-<div style={{fontSize:13,color:C.text,fontStyle:“italic”,lineHeight:1.6}}>”{e.text}”</div>
-
-</div>
-
-))}
-
-</div>
-
-);
-
-}
-
-
-
-function App() {
-
-const [screen, setScreen] = useState(“home”);
-
-const renderScreen = () => {
-
-if(screen===“home”) return <HomeScreen/>;
-
-if(screen===“alarm”) return <AlarmScreen/>;
-
-if(screen===“ritual”) return <RitualScreen/>;
-
-if(screen===“declarations”) return <DeclarationsScreen/>;
-
-if(screen===“journal”) return <JournalScreen/>;
-
-};
-
-return (
-
-<div style={{
-
-width:380,minHeight:760,
-
-background:C.night,borderRadius:40,
-
-border:`2px solid ${C.border}`,
-
-overflow:“hidden”,display:“flex”,flexDirection:“column”,
-
-boxShadow:`0 40px 100px rgba(0,0,0,0.7),0 0 0 1px ${C.border}`,
-
-}}>
-
-{/* Status bar */}
-
-<div style={{
-
-padding:“14px 22px 6px”,display:“flex”,
-
-justifyContent:“space-between”,alignItems:“center”,
-
-fontSize:11,color:C.textMuted,flexShrink:0,
-
-}}>
-
-<span style={{fontWeight:800}}>9:41</span>
-
-<div style={{width:100,height:18,background:C.deep,borderRadius:9}}/>
-
-<span>●●● 100%</span>
-
-</div>
-
-
-
-```
-
-  {/* Header */}
-
-  <div style={{
-
-    padding:"8px 18px 12px",
-
-    borderBottom:`1px solid ${C.border}`,
-
-    display:"flex",alignItems:"center",justifyContent:"space-between",
-
-    flexShrink:0,
-
-  }}>
-
-    <div>
-
-      <div style={{
-
-        fontSize:19,fontWeight:800,letterSpacing:"-0.5px",
-
-        background:`linear-gradient(90deg,${C.gold},${C.rose})`,
-
-        WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
-
-      }}>✦ Prends Autorité</div>
-
-      <div style={{fontSize:10,color:C.textFaint,marginTop:1}}>
-
-        {SCREENS.find(s=>s.id===screen)?.label}
-
-      </div>
-
-    </div>
-
-    <div style={{
-
-      width:34,height:34,borderRadius:"50%",
-
-      background:C.goldMuted,border:`1px solid ${C.goldBorder}`,
-
-      display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,
-
-    }}>🙏</div>
-
-  </div>
-
-
-
-  {/* Content */}
-
-  <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden",position:"relative"}}>
-
-    {renderScreen()}
-
-  </div>
-
-
-
-  {/* Bottom nav */}
-
-  <div style={{
-
-    display:"flex",borderTop:`1px solid ${C.border}`,
-
-    background:C.deep,padding:"8px 6px 14px",flexShrink:0,
-
-  }}>
-
-    {SCREENS.map(s=>(
-
-      <button key={s.id} onClick={()=>setScreen(s.id)} style={{
-
-        flex:1,background:"none",border:"none",
-
-        display:"flex",flexDirection:"column",alignItems:"center",gap:4,
-
-        cursor:"pointer",padding:"4px 0",
-
-      }}>
-
-        <div style={{
-
-          width:34,height:34,borderRadius:11,
-
-          background:screen===s.id?C.goldMuted:"transparent",
-
-          border:`1px solid ${screen===s.id?C.goldBorder:"transparent"}`,
-
-          display:"flex",alignItems:"center",justifyContent:"center",
-
-          fontSize:17,transition:"all 0.2s",
-
-        }}>{s.icon}</div>
-
-        <span style={{
-
-          fontSize:8,fontWeight:700,
-
-          color:screen===s.id?C.gold:C.textFaint,
-
-          textAlign:"center",
-
-        }}>{s.label}</span>
-
-      </button>
-
-    ))}
-
-  </div>
-
-</div>
-
-```
-
-
-
-);
-
-}
-
-
-
-ReactDOM.render(<App/>, document.getElementById(‘root’));
-
-</script>
-
-
-
-</body>
-
-</html>
-
-
-
-
-
-
-
-Landing page
-
-
-
-
-
-<!DOCTYPE html>
-
-
 
 <html lang="fr">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Prends Autorité — L'app du réveil spirituel</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-
-  :root {
-
-    --night: #07090F;
-
-    --deep: #0D1020;
-
-    --surface: #141826;
-
-    --border: #1E2640;
-
-    --gold: #E8A820;
-
-    --gold-light: #F5C842;
-
-    --gold-muted: rgba(232,168,32,0.12);
-
-    --gold-border: rgba(232,168,32,0.25);
-
-    --rose: #E8607A;
-
-    --rose-muted: rgba(232,96,122,0.1);
-
-    --text: #EEF2FF;
-
-    --muted: #6B7BA4;
-
-    --faint: #2E3A5C;
-
-  }
-
-
-
-- { box-sizing: border-box; margin: 0; padding: 0; }
-
-
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-
+:root {
+–night: #07090F;
+–deep: #0C0F1D;
+–surface: #131728;
+–surface2: #1A2038;
+–border: #1E2640;
+–border2: #2A3555;
+–gold: #E8A820;
+–gold-l: #F5C842;
+–gold-m: rgba(232,168,32,0.13);
+–gold-b: rgba(232,168,32,0.28);
+–rose: #E8607A;
+–rose-m: rgba(232,96,122,0.11);
+–rose-b: rgba(232,96,122,0.3);
+–sky: #38BDF8;
+–green: #22C55E;
+–red: #EF4444;
+–text: #EEF2FF;
+–muted: #6B7BA4;
+–faint: #2E3A5C;
+}
 
 body {
-
 background: var(–night);
-
 color: var(–text);
-
 font-family: ‘DM Sans’, sans-serif;
-
 overflow-x: hidden;
-
+-webkit-font-smoothing: antialiased;
 }
 
-
+/* ── ANIMATIONS ── */
+@keyframes twinkle {
+0%,100% { opacity: var(–a); transform: scale(1); }
+50% { opacity: calc(var(–a) * 2.2); transform: scale(1.5); }
+}
+@keyframes float {
+0%,100% { transform: translateY(0px); }
+50% { transform: translateY(-12px); }
+}
+@keyframes pulse-glow {
+0%,100% { box-shadow: 0 0 30px var(–gold), 0 0 60px rgba(232,168,32,0.25); }
+50% { box-shadow: 0 0 50px var(–gold), 0 0 100px rgba(232,168,32,0.4); }
+}
+@keyframes spin-slow {
+to { transform: translate(-50%,-50%) rotate(360deg); }
+}
+@keyframes fade-up {
+from { opacity:0; transform:translateY(32px); }
+to   { opacity:1; transform:translateY(0); }
+}
+@keyframes horizon-glow {
+0%,100% { opacity: 0.4; }
+50% { opacity: 0.8; }
+}
 
 /* ── HERO ── */
-
 .hero {
-
 min-height: 100vh;
-
 display: flex;
-
 flex-direction: column;
-
 align-items: center;
-
 justify-content: center;
-
 position: relative;
-
-padding: 60px 20px 80px;
-
+padding: 80px 24px 100px;
 text-align: center;
-
 overflow: hidden;
-
 }
-
-
-
 .hero-bg {
-
-position: absolute;
-
-inset: 0;
-
+position: absolute; inset: 0; pointer-events: none;
 background:
-
-radial-gradient(ellipse 70% 50% at 50% 100%, rgba(232,96,122,0.18) 0%, transparent 60%),
-
-radial-gradient(ellipse 50% 30% at 50% 95%, rgba(232,168,32,0.12) 0%, transparent 50%),
-
-radial-gradient(ellipse 100% 60% at 50% 120%, rgba(13,16,32,0.9) 0%, transparent 70%);
-
-pointer-events: none;
-
+radial-gradient(ellipse 80% 55% at 50% 100%, rgba(232,96,122,0.2) 0%, transparent 65%),
+radial-gradient(ellipse 55% 35% at 50% 95%, rgba(232,168,32,0.14) 0%, transparent 55%);
 }
-
-
-
-.stars {
-
-position: absolute;
-
-inset: 0;
-
-pointer-events: none;
-
+.stars-layer {
+position: absolute; inset: 0; pointer-events: none;
 }
-
-
-
 .star {
-
-position: absolute;
-
-border-radius: 50%;
-
+position: absolute; border-radius: 50%;
 background: var(–gold);
-
-animation: twinkle var(–dur) ease-in-out infinite alternate;
-
+animation: twinkle var(–d) ease-in-out infinite;
+animation-delay: var(–delay);
 }
-
-
-
-@keyframes twinkle {
-
-from { opacity: var(–op-from); transform: scale(1); }
-
-to   { opacity: var(–op-to);   transform: scale(1.4); }
-
-}
-
-
-
-.horizon-line {
-
-position: absolute;
-
-bottom: 0;
-
-left: 0; right: 0;
-
-height: 1px;
-
+.horizon {
+position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
 background: linear-gradient(90deg, transparent, var(–rose), var(–gold), var(–rose), transparent);
-
-opacity: 0.5;
-
+animation: horizon-glow 4s ease-in-out infinite;
 }
-
-
 
 /* Sun */
-
 .sun-wrap {
-
-position: relative;
-
-width: 120px;
-
-height: 120px;
-
-margin: 0 auto 36px;
-
+position: relative; width: 130px; height: 130px;
+margin: 0 auto 40px;
 animation: float 6s ease-in-out infinite;
-
+z-index: 1;
 }
-
-
-
-@keyframes float {
-
-0%, 100% { transform: translateY(0); }
-
-50%       { transform: translateY(-10px); }
-
-}
-
-
-
 .sun-ring {
-
-position: absolute;
-
-top: 50%; left: 50%;
-
-transform: translate(-50%, -50%);
-
-border-radius: 50%;
-
-border: 1px solid var(–gold);
-
+position: absolute; top: 50%; left: 50%;
+transform: translate(-50%,-50%);
+border-radius: 50%; border: 1px solid var(–gold);
 }
-
-
-
 .sun-core {
-
-position: absolute;
-
-top: 50%; left: 50%;
-
-transform: translate(-50%, -50%);
-
-width: 56px; height: 56px;
-
-border-radius: 50%;
-
-background: radial-gradient(circle, #FFE566 20%, var(–gold) 70%);
-
-box-shadow: 0 0 32px var(–gold), 0 0 70px rgba(232,168,32,0.3);
-
-animation: pulse 4s ease-in-out infinite;
-
+position: absolute; top: 50%; left: 50%;
+transform: translate(-50%,-50%);
+width: 58px; height: 58px; border-radius: 50%;
+background: radial-gradient(circle, #FFF0A0 10%, #FFE566 35%, var(–gold) 80%);
+animation: pulse-glow 4s ease-in-out infinite;
+z-index: 2;
 }
-
-
-
-@keyframes pulse {
-
-0%, 100% { box-shadow: 0 0 32px var(–gold), 0 0 70px rgba(232,168,32,0.3); }
-
-50%       { box-shadow: 0 0 50px var(–gold), 0 0 100px rgba(232,168,32,0.4); }
-
+.sun-rays-wrap {
+position: absolute; top: 50%; left: 50%;
+transform: translate(-50%,-50%);
+width: 130px; height: 130px; border-radius: 50%;
+animation: spin-slow 22s linear infinite;
 }
-
-
-
-.sun-rays {
-
-position: absolute;
-
-top: 50%; left: 50%;
-
-transform: translate(-50%, -50%);
-
-width: 120px; height: 120px;
-
-border-radius: 50%;
-
-animation: rotate 20s linear infinite;
-
-}
-
-
-
-@keyframes rotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-
-
 .ray {
-
-position: absolute;
-
-width: 2px;
-
-background: linear-gradient(to top, transparent, rgba(232,168,32,0.4));
-
-left: 50%;
-
-transform-origin: bottom center;
-
-bottom: 50%;
-
+position: absolute; width: 2px; left: calc(50% - 1px);
+transform-origin: bottom center; bottom: 50%;
+background: linear-gradient(to top, transparent, rgba(232,168,32,0.45));
 }
-
-
+.horizon-slice {
+position: absolute; left: -40px; right: -40px; bottom: 18px; height: 1px;
+background: linear-gradient(90deg, transparent, var(–rose) 20%, var(–gold) 50%, var(–rose) 80%, transparent);
+opacity: 0.65;
+}
 
 /* Tag */
-
 .tag {
-
-display: inline-flex;
-
-align-items: center;
-
-gap: 6px;
-
-background: var(–gold-muted);
-
-border: 1px solid var(–gold-border);
-
-border-radius: 100px;
-
-padding: 6px 16px;
-
-font-size: 11px;
-
-font-weight: 700;
-
-color: var(–gold);
-
-letter-spacing: 0.1em;
-
-text-transform: uppercase;
-
-margin-bottom: 24px;
-
+display: inline-flex; align-items: center; gap: 7px;
+background: var(–gold-m); border: 1px solid var(–gold-b);
+border-radius: 100px; padding: 7px 18px;
+font-size: 11px; font-weight: 700; color: var(–gold);
+letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 26px;
+position: relative; z-index: 1;
 }
 
-
-
-/* Headline */
-
+/* Headlines */
 .headline {
-
 font-family: ‘Cormorant Garamond’, serif;
-
-font-size: clamp(48px, 8vw, 88px);
-
-font-weight: 700;
-
-line-height: 0.95;
-
-letter-spacing: -2px;
-
-margin-bottom: 10px;
-
+font-size: clamp(52px, 9vw, 96px);
+font-weight: 700; line-height: 0.92;
+letter-spacing: -2px; margin-bottom: 12px;
+position: relative; z-index: 1;
 }
-
-
-
-.headline-gold {
-
-background: linear-gradient(135deg, var(–gold-light), var(–gold), var(–rose));
-
--webkit-background-clip: text;
-
--webkit-text-fill-color: transparent;
-
-background-clip: text;
-
-display: block;
-
+.grad-text {
+background: linear-gradient(135deg, var(–gold-l) 0%, var(–gold) 50%, var(–rose) 100%);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+background-clip: text; display: block;
 }
-
-
-
-.headline-white { display: block; color: var(–text); }
-
-
+.white-text { display: block; color: var(–text); }
 
 .subheadline {
-
 font-family: ‘Cormorant Garamond’, serif;
-
-font-size: clamp(18px, 3vw, 26px);
-
-font-style: italic;
-
-color: var(–muted);
-
-margin-bottom: 40px;
-
-line-height: 1.5;
-
-max-width: 560px;
-
-margin-left: auto;
-
-margin-right: auto;
-
+font-size: clamp(17px, 2.8vw, 24px); font-style: italic;
+color: var(–muted); line-height: 1.6; margin-bottom: 44px;
+max-width: 540px; margin-left: auto; margin-right: auto;
+position: relative; z-index: 1;
 }
 
-
-
-/* Email form */
-
-.form-wrap {
-
-position: relative;
-
-max-width: 480px;
-
-width: 100%;
-
-margin: 0 auto 20px;
-
+/* Form */
+.form-outer {
+position: relative; max-width: 480px; width: 100%;
+margin: 0 auto 16px; z-index: 1;
 }
-
-
-
-.form-inner {
-
-display: flex;
-
-gap: 10px;
-
-background: var(–surface);
-
-border: 1px solid var(–gold-border);
-
-border-radius: 16px;
-
-padding: 8px 8px 8px 18px;
-
-box-shadow: 0 0 40px rgba(232,168,32,0.08);
-
+.form-box {
+display: flex; gap: 8px; align-items: center;
+background: var(–surface2); border: 1px solid var(–gold-b);
+border-radius: 16px; padding: 8px 8px 8px 20px;
+box-shadow: 0 0 50px rgba(232,168,32,0.09);
 }
-
-
-
-.form-inner input {
-
-flex: 1;
-
-background: none;
-
-border: none;
-
-outline: none;
-
-font-family: ‘DM Sans’, sans-serif;
-
-font-size: 14px;
-
-color: var(–text);
-
-min-width: 0;
-
+.form-box input {
+flex: 1; background: none; border: none; outline: none;
+font-family: ‘DM Sans’, sans-serif; font-size: 14px;
+color: var(–text); min-width: 0;
 }
-
-
-
-.form-inner input::placeholder { color: var(–muted); }
-
-
-
-.form-inner button {
-
-background: linear-gradient(135deg, var(–gold), #C87A10);
-
-border: none;
-
-border-radius: 10px;
-
-padding: 12px 20px;
-
-font-family: ‘DM Sans’, sans-serif;
-
-font-size: 13px;
-
-font-weight: 700;
-
-color: var(–night);
-
-cursor: pointer;
-
-white-space: nowrap;
-
-transition: transform 0.2s, box-shadow 0.2s;
-
+.form-box input::placeholder { color: var(–muted); }
+.form-btn {
+background: linear-gradient(135deg, var(–gold-l), var(–gold), #C87A10);
+border: none; border-radius: 11px; padding: 13px 22px;
+font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 700;
+color: #07090F; cursor: pointer; white-space: nowrap;
+transition: transform 0.18s, box-shadow 0.18s; flex-shrink: 0;
 }
-
-
-
-.form-inner button:hover {
-
-transform: translateY(-1px);
-
-box-shadow: 0 8px 24px rgba(232,168,32,0.3);
-
+.form-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(232,168,32,0.35); }
+.form-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+.form-note { font-size: 11px; color: var(–muted); margin-top: 10px; text-align: center; }
+.form-note strong { color: var(–gold); }
+.success-box {
+display: none; margin-top: 14px;
+background: var(–gold-m); border: 1px solid var(–gold-b);
+border-radius: 13px; padding: 16px 22px;
+font-size: 14px; color: var(–gold); font-weight: 600; line-height: 1.5;
 }
-
-
-
-.form-note {
-
-font-size: 11px;
-
-color: var(–muted);
-
+.success-box.show { display: block; }
+.error-box {
+display: none; margin-top: 10px;
+background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+border-radius: 13px; padding: 12px 18px;
+font-size: 13px; color: #FCA5A5;
 }
-
-
-
-.form-note span { color: var(–gold); }
-
-
+.error-box.show { display: block; }
 
 /* ── VERSE BANNER ── */
-
 .verse-banner {
-
 background: linear-gradient(135deg, var(–surface), var(–deep));
-
-border-top: 1px solid var(–border);
-
-border-bottom: 1px solid var(–border);
-
-padding: 40px 20px;
-
-text-align: center;
-
-position: relative;
-
-overflow: hidden;
-
+border-top: 1px solid var(–border); border-bottom: 1px solid var(–border);
+padding: 50px 24px; text-align: center; position: relative; overflow: hidden;
 }
-
-
-
 .verse-banner::before {
-
-content: ‘”’;
-
-position: absolute;
-
-top: -20px; left: 20px;
-
-font-family: ‘Cormorant Garamond’, serif;
-
-font-size: 180px;
-
-color: var(–gold);
-
-opacity: 0.05;
-
-line-height: 1;
-
+content: ‘”’; position: absolute; top: -30px; left: 20px;
+font-family: ‘Cormorant Garamond’, serif; font-size: 200px;
+color: var(–gold); opacity: 0.045; line-height: 1; pointer-events: none;
 }
-
-
-
 .verse-text {
-
 font-family: ‘Cormorant Garamond’, serif;
-
-font-size: clamp(20px, 3.5vw, 30px);
-
-font-style: italic;
-
-color: var(–text);
-
-max-width: 700px;
-
-margin: 0 auto 12px;
-
-line-height: 1.5;
-
+font-size: clamp(19px, 3.2vw, 29px); font-style: italic;
+color: var(–text); max-width: 700px; margin: 0 auto 14px; line-height: 1.55;
 }
-
-
-
 .verse-ref {
-
-font-size: 12px;
-
-font-weight: 700;
-
-color: var(–gold);
-
-letter-spacing: 0.1em;
-
-text-transform: uppercase;
-
+font-size: 11px; font-weight: 700; color: var(–gold);
+letter-spacing: 0.12em; text-transform: uppercase;
 }
 
-
+/* ── SECTION WRAPPER ── */
+.section {
+max-width: 1020px; margin: 0 auto; padding: 88px 24px;
+}
+.section-label {
+font-size: 11px; font-weight: 700; color: var(–gold);
+letter-spacing: 0.15em; text-transform: uppercase;
+text-align: center; margin-bottom: 14px;
+}
+.section-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(30px, 5vw, 54px); font-weight: 700;
+text-align: center; margin-bottom: 52px; line-height: 1.1;
+}
 
 /* ── FEATURES ── */
-
-.section {
-
-max-width: 1000px;
-
-margin: 0 auto;
-
-padding: 80px 20px;
-
-}
-
-
-
-.section-label {
-
-font-size: 11px;
-
-font-weight: 700;
-
-color: var(–gold);
-
-letter-spacing: 0.15em;
-
-text-transform: uppercase;
-
-text-align: center;
-
-margin-bottom: 12px;
-
-}
-
-
-
-.section-title {
-
-font-family: ‘Cormorant Garamond’, serif;
-
-font-size: clamp(32px, 5vw, 52px);
-
-font-weight: 700;
-
-text-align: center;
-
-margin-bottom: 50px;
-
-line-height: 1.1;
-
-}
-
-
-
 .features-grid {
-
 display: grid;
-
-grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-
+grid-template-columns: repeat(3, 1fr);
 gap: 16px;
-
 }
+@media (max-width: 860px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .features-grid { grid-template-columns: 1fr; } }
 
-
-
-.feature-card {
-
-background: var(–surface);
-
-border: 1px solid var(–border);
-
-border-radius: 20px;
-
-padding: 28px 24px;
-
-transition: border-color 0.3s, transform 0.3s;
-
-position: relative;
-
-overflow: hidden;
-
+.feat-card {
+background: var(–surface); border-radius: 20px;
+padding: 28px 24px; border: 1px solid var(–border);
+transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+position: relative; overflow: hidden;
 }
-
-
-
-.feature-card::after {
-
-content: ‘’;
-
-position: absolute;
-
-inset: 0;
-
-border-radius: 20px;
-
-opacity: 0;
-
-transition: opacity 0.3s;
-
-pointer-events: none;
-
-}
-
-
-
-.feature-card:hover { transform: translateY(-4px); }
-
-.feature-card:hover::after { opacity: 1; }
-
-
-
-.feature-card.gold { border-color: var(–gold-border); }
-
-.feature-card.gold::after { box-shadow: inset 0 0 30px rgba(232,168,32,0.05); }
-
-.feature-card.gold:hover { border-color: var(–gold); }
-
-
-
-.feature-card.rose { border-color: rgba(232,96,122,0.2); }
-
-.feature-card.rose:hover { border-color: var(–rose); }
-
-
+.feat-card:hover { transform: translateY(-5px); }
+.feat-card.g { border-color: var(–gold-b); }
+.feat-card.g:hover { border-color: var(–gold); box-shadow: 0 12px 40px rgba(232,168,32,0.12); }
+.feat-card.r { border-color: var(–rose-b); }
+.feat-card.r:hover { border-color: var(–rose); box-shadow: 0 12px 40px rgba(232,96,122,0.12); }
 
 .feat-icon {
-
-width: 48px; height: 48px;
-
-border-radius: 14px;
-
+width: 50px; height: 50px; border-radius: 14px;
 display: flex; align-items: center; justify-content: center;
-
-font-size: 22px;
-
-margin-bottom: 18px;
-
+font-size: 22px; margin-bottom: 18px;
 }
+.feat-icon.g { background: var(–gold-m); border: 1px solid var(–gold-b); }
+.feat-icon.r { background: var(–rose-m); border: 1px solid var(–rose-b); }
+.feat-title { font-family: ‘Cormorant Garamond’, serif; font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.feat-desc { font-size: 13px; color: var(–muted); line-height: 1.75; }
+.feat-verse { margin-top: 14px; font-size: 11px; color: var(–gold); font-weight: 700; letter-spacing: 0.05em; }
 
-
-
-.feat-icon.gold { background: var(–gold-muted); border: 1px solid var(–gold-border); }
-
-.feat-icon.rose { background: var(–rose-muted); border: 1px solid rgba(232,96,122,0.25); }
-
-
-
-.feat-title {
-
-font-family: ‘Cormorant Garamond’, serif;
-
-font-size: 22px;
-
-font-weight: 700;
-
-margin-bottom: 10px;
-
-color: var(–text);
-
-}
-
-
-
-.feat-desc {
-
-font-size: 13px;
-
-color: var(–muted);
-
-line-height: 1.7;
-
-}
-
-
-
-.feat-verse {
-
-margin-top: 14px;
-
-font-size: 11px;
-
-color: var(–gold);
-
-font-weight: 700;
-
-letter-spacing: 0.05em;
-
-}
-
-
-
-/* ── ALARM VISUAL ── */
-
-.alarms-section {
-
+/* ── THÉOLOGIQUE ── */
+.theo-wrap {
 background: var(–deep);
-
-border-top: 1px solid var(–border);
-
-border-bottom: 1px solid var(–border);
-
-padding: 80px 20px;
-
+border-top: 1px solid var(–border); border-bottom: 1px solid var(–border);
+padding: 80px 24px;
 }
-
-
-
-.alarm-cards {
-
-display: flex;
-
-flex-direction: column;
-
-gap: 12px;
-
-max-width: 560px;
-
-margin: 0 auto;
-
+.theo-box {
+max-width: 760px; margin: 0 auto;
+background: linear-gradient(140deg, #0D1428, #141E38);
+border: 1px solid var(–gold-b); border-radius: 24px;
+padding: 48px 52px; position: relative; overflow: hidden;
 }
+.theo-box::before {
+content: ‘✝’; position: absolute; top: -10px; right: 28px;
+font-size: 140px; color: var(–gold); opacity: 0.038;
+font-family: serif; line-height: 1; pointer-events: none;
+}
+.theo-badge {
+display: inline-flex; align-items: center; gap: 8px;
+background: rgba(232,168,32,0.08); border: 1px solid var(–gold-b);
+border-radius: 100px; padding: 5px 15px;
+font-size: 10px; font-weight: 700; color: var(–gold);
+letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 24px;
+}
+.theo-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(26px, 4vw, 40px); font-weight: 700;
+line-height: 1.2; margin-bottom: 22px; color: var(–text);
+}
+.theo-title em {
+font-style: italic;
+background: linear-gradient(135deg, var(–gold-l), var(–gold));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.theo-body { font-size: 14px; color: var(–muted); line-height: 1.9; margin-bottom: 30px; }
+.theo-body strong { color: var(–text); font-weight: 600; }
+.theo-body em { font-style: italic; color: var(–text); }
 
+.theo-divider { height: 1px; margin: 28px 0; background: linear-gradient(90deg, transparent, var(–gold-b), transparent); }
 
+.theo-pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 30px; }
+@media (max-width: 640px) { .theo-pillars { grid-template-columns: 1fr; } }
 
+.pillar {
+background: rgba(232,168,32,0.05); border: 1px solid rgba(232,168,32,0.12);
+border-radius: 15px; padding: 18px 18px;
+}
+.pillar-icon { font-size: 22px; margin-bottom: 10px; }
+.pillar-title { font-size: 11px; font-weight: 700; color: var(–gold); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+.pillar-text { font-size: 12px; color: var(–muted); line-height: 1.65; }
+
+.theo-verse {
+background: var(–surface); border-left: 3px solid var(–gold);
+border-radius: 0 13px 13px 0; padding: 18px 22px;
+}
+.theo-verse p { font-family: ‘Cormorant Garamond’, serif; font-size: 16px; font-style: italic; color: var(–text); line-height: 1.65; margin-bottom: 8px; }
+.theo-verse span { font-size: 11px; font-weight: 700; color: var(–gold); letter-spacing: 0.08em; text-transform: uppercase; }
+
+@media (max-width: 640px) { .theo-box { padding: 30px 24px; } }
+
+/* ── ALARMES ── */
+.alarms-wrap {
+background: var(–deep);
+border-top: 1px solid var(–border); border-bottom: 1px solid var(–border);
+padding: 88px 24px;
+}
+.alarm-list { display: flex; flex-direction: column; gap: 14px; max-width: 580px; margin: 0 auto; }
 .alarm-card {
-
-background: var(–surface);
-
-border-radius: 16px;
-
-padding: 20px 22px;
-
-display: flex;
-
-align-items: center;
-
-gap: 18px;
-
-border: 1px solid var(–border);
-
-transition: all 0.3s;
-
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 18px; padding: 22px 26px;
+display: flex; align-items: center; gap: 20px;
+transition: all 0.28s;
 }
-
-
-
-.alarm-card:hover { border-color: var(–gold-border); transform: translateX(6px); }
-
-
-
-.alarm-dot {
-
-width: 12px; height: 12px;
-
-border-radius: 50%;
-
-flex-shrink: 0;
-
-}
-
-
-
-.alarm-time {
-
-font-size: 28px;
-
-font-weight: 800;
-
-font-family: ‘DM Sans’, sans-serif;
-
-letter-spacing: -1px;
-
-min-width: 80px;
-
-}
-
-
-
+.alarm-card:hover { transform: translateX(8px); border-color: var(–gold-b); box-shadow: 0 4px 24px rgba(232,168,32,0.08); }
+.alarm-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+.alarm-time { font-size: 30px; font-weight: 800; letter-spacing: -1px; min-width: 85px; flex-shrink: 0; }
 .alarm-info { flex: 1; }
+.alarm-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.alarm-sub { font-size: 11px; color: var(–muted); font-style: italic; }
+.alarm-badge { font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 100px; border: 1px solid; flex-shrink: 0; }
+.alarm-note { text-align: center; margin-top: 22px; font-size: 12px; color: var(–muted); font-style: italic; }
 
-.alarm-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
-
-.alarm-verse { font-size: 11px; color: var(–muted); font-style: italic; }
-
-
-
-.alarm-badge {
-
-font-size: 10px;
-
-font-weight: 700;
-
-padding: 4px 10px;
-
-border-radius: 100px;
-
-border: 1px solid;
-
-letter-spacing: 0.05em;
-
+/* ── WORLDWIDE ── */
+.world-wrap { max-width: 920px; margin: 0 auto; padding: 88px 24px; text-align: center; }
+.counters { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin: 56px 0; }
+.counter { text-align: center; }
+.counter-num {
+font-family: ‘Cormorant Garamond’, serif; font-size: 56px; font-weight: 700; line-height: 1;
+background: linear-gradient(135deg, var(–gold-l), var(–gold));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+margin-bottom: 6px;
 }
-
-
-
-/* ── WORLDMAP SECTION ── */
-
-.world-section {
-
-max-width: 900px;
-
-margin: 0 auto;
-
-padding: 80px 20px;
-
-text-align: center;
-
+.counter-label { font-size: 11px; color: var(–muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.regions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.region {
+background: var(–surface); border: 1px solid var(–border); border-radius: 100px;
+padding: 9px 20px; font-size: 13px; color: var(–muted);
+display: flex; align-items: center; gap: 8px; transition: all 0.2s; cursor: default;
 }
-
-
-
-.regions {
-
-display: flex;
-
-flex-wrap: wrap;
-
-gap: 10px;
-
-justify-content: center;
-
-margin-top: 32px;
-
-}
-
-
-
-.region-tag {
-
-background: var(–surface);
-
-border: 1px solid var(–border);
-
-border-radius: 100px;
-
-padding: 8px 18px;
-
-font-size: 13px;
-
-color: var(–muted);
-
-display: flex;
-
-align-items: center;
-
-gap: 8px;
-
-transition: all 0.2s;
-
-}
-
-
-
-.region-tag:hover {
-
-border-color: var(–gold-border);
-
-color: var(–text);
-
-}
-
-
-
-.region-count {
-
-font-size: 11px;
-
-font-weight: 700;
-
-color: var(–gold);
-
-}
-
-
+.region:hover { border-color: var(–gold-b); color: var(–text); }
+.region-count { font-size: 11px; font-weight: 700; color: var(–gold); }
 
 /* ── FINAL CTA ── */
-
-.final-cta {
-
-padding: 100px 20px;
-
-text-align: center;
-
-position: relative;
-
-overflow: hidden;
-
+.cta-section {
+padding: 110px 24px; text-align: center; position: relative; overflow: hidden;
 }
-
-
-
-.final-cta-bg {
-
-position: absolute;
-
-inset: 0;
-
+.cta-bg {
+position: absolute; inset: 0; pointer-events: none;
 background:
-
-radial-gradient(ellipse 60% 50% at 50% 50%, rgba(232,168,32,0.06) 0%, transparent 70%),
-
-radial-gradient(ellipse 40% 30% at 50% 50%, rgba(232,96,122,0.05) 0%, transparent 60%);
-
-pointer-events: none;
-
+radial-gradient(ellipse 65% 55% at 50% 50%, rgba(232,168,32,0.07) 0%, transparent 70%),
+radial-gradient(ellipse 40% 30% at 50% 50%, rgba(232,96,122,0.05) 0%, transparent 65%);
 }
-
-
-
-.cta-box {
-
-max-width: 600px;
-
-margin: 0 auto;
-
-position: relative;
-
-z-index: 1;
-
-}
-
-
-
+.cta-inner { max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
 .cta-title {
-
 font-family: ‘Cormorant Garamond’, serif;
-
-font-size: clamp(36px, 6vw, 60px);
-
-font-weight: 700;
-
-line-height: 1.1;
-
-margin-bottom: 20px;
-
+font-size: clamp(36px, 6vw, 64px); font-weight: 700; line-height: 1.08; margin-bottom: 22px;
 }
-
-
-
-.cta-sub {
-
-font-size: 15px;
-
-color: var(–muted);
-
-margin-bottom: 40px;
-
-line-height: 1.7;
-
+.cta-title .sub-grad {
+background: linear-gradient(135deg, var(–gold-l), var(–rose));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
-
-
-/* Success state */
-
-.success-msg {
-
-display: none;
-
-background: var(–gold-muted);
-
-border: 1px solid var(–gold-border);
-
-border-radius: 14px;
-
-padding: 18px 24px;
-
-font-size: 14px;
-
-color: var(–gold);
-
-font-weight: 600;
-
-margin-top: 16px;
-
-}
-
-
-
-.success-msg.show { display: block; }
-
-
+.cta-sub { font-size: 15px; color: var(–muted); line-height: 1.75; margin-bottom: 44px; }
 
 /* ── FOOTER ── */
-
 footer {
-
-border-top: 1px solid var(–border);
-
-padding: 30px 20px;
-
-text-align: center;
-
-font-size: 12px;
-
-color: var(–faint);
-
+border-top: 1px solid var(–border); padding: 34px 24px;
+text-align: center; font-size: 12px; color: var(–faint);
+}
+.footer-logo {
+font-family: ‘Cormorant Garamond’, serif; font-size: 22px; font-weight: 700;
+background: linear-gradient(135deg, var(–gold), var(–rose));
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+margin-bottom: 10px;
 }
 
-
-
-footer span { color: var(–muted); }
-
-
-
-/* Animations on scroll */
-
-.fade-up {
-
-opacity: 0;
-
-transform: translateY(30px);
-
-transition: opacity 0.7s ease, transform 0.7s ease;
-
+/* ── REVEAL ── */
+.reveal {
+opacity: 0; transform: translateY(28px);
+transition: opacity 0.75s ease, transform 0.75s ease;
 }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+.reveal-d4 { transition-delay: 0.4s; }
 
-
-
-.fade-up.visible {
-
-opacity: 1;
-
-transform: translateY(0);
-
+/* ── MOBILE ── */
+@media (max-width: 520px) {
+.form-box { flex-direction: column; padding: 14px; }
+.form-btn { width: 100%; padding: 15px; }
+.alarm-card { padding: 16px 18px; gap: 12px; }
+.alarm-time { font-size: 24px; min-width: 68px; }
+.alarm-badge { display: none; }
 }
-
-
-
-/* Counter */
-
-.counter-wrap {
-
-display: flex;
-
-justify-content: center;
-
-gap: 40px;
-
-margin: 60px 0;
-
-flex-wrap: wrap;
-
-}
-
-
-
-.counter-item { text-align: center; }
-
-
-
-.counter-num {
-
-font-family: ‘Cormorant Garamond’, serif;
-
-font-size: 52px;
-
-font-weight: 700;
-
-background: linear-gradient(135deg, var(–gold-light), var(–gold));
-
--webkit-background-clip: text;
-
--webkit-text-fill-color: transparent;
-
-background-clip: text;
-
-line-height: 1;
-
-margin-bottom: 6px;
-
-}
-
-
-
-.counter-label { font-size: 12px; color: var(–muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
-
-
-
-/* Mobile */
-
-@media (max-width: 600px) {
-
-.form-inner { flex-direction: column; padding: 12px; }
-
-.form-inner button { width: 100%; padding: 14px; }
-
-.alarm-card { padding: 16px; }
-
-.alarm-time { font-size: 22px; min-width: 65px; }
-
-}
-
 </style>
 
-
-
 </head>
-
 <body>
 
-
-
-<!-- ═══════════════ HERO ═══════════════ -->
-
-
+<!-- ═══ HERO ═══ -->
 
 <section class="hero">
-
   <div class="hero-bg"></div>
-
-
-
-  <!-- Stars -->
-
-
-
-  <div class="stars" id="stars"></div>
-
-
-
-  <!-- Horizon -->
-
-
-
-  <div class="horizon-line"></div>
-
-
+  <div class="stars-layer" id="stars"></div>
+  <div class="horizon"></div>
 
   <!-- Sun -->
 
-
-
   <div class="sun-wrap">
-
-    <div class="sun-ring" style="width:80px;height:80px;opacity:0.1;"></div>
-
-    <div class="sun-ring" style="width:100px;height:100px;opacity:0.07;"></div>
-
-    <div class="sun-ring" style="width:120px;height:120px;opacity:0.04;"></div>
-
-
-
-```
-
-<!-- Rays -->
-
-<div class="sun-rays" id="rays"></div>
-
-
-
-<div class="sun-core"></div>
-
-```
-
-
-
+    <div class="sun-ring" style="width:85px;height:85px;opacity:0.1;"></div>
+    <div class="sun-ring" style="width:105px;height:105px;opacity:0.065;"></div>
+    <div class="sun-ring" style="width:130px;height:130px;opacity:0.04;"></div>
+    <div class="sun-rays-wrap" id="rays"></div>
+    <div class="sun-core"></div>
+    <div class="horizon-slice"></div>
   </div>
-
-
 
   <div class="tag">🌅 Lancement bientôt · Sois le premier informé</div>
 
-
-
   <h1 class="headline">
-
-    <span class="headline-gold">Prends Autorité</span>
-
-    <span class="headline-white">sur ton matin</span>
-
+    <span class="grad-text">Prends Autorité</span>
+    <span class="white-text">sur ton matin</span>
   </h1>
 
-
-
   <p class="subheadline">
-
     L'app qui calcule l'heure exacte du lever du soleil à ta position<br>
-
     et t'équipe spirituellement pour renverser, déclarer et accueillir chaque nouvelle aurore.
-
   </p>
 
-
-
-  <!-- Email form -->
-
-
-
-  <div class="form-wrap">
-
-    <div class="form-inner">
-
-      <input type="email" id="email-hero" placeholder="ton@email.com" />
-
-      <button onclick="submitEmail('email-hero', 'msg-hero')">Je veux l'accès →</button>
-
+  <div class="form-outer">
+    <div class="form-box">
+      <input type="email" id="email-hero" placeholder="ton@email.com" autocomplete="email" />
+      <button class="form-btn" onclick="subscribe('email-hero','succ-hero','err-hero',this)">Je veux l'accès →</button>
     </div>
-
-    <p class="form-note" style="margin-top:10px;">
-
-      <span>0 spam.</span> Juste une notification le jour du lancement. Gratuit.
-
-    </p>
-
-    <div class="success-msg" id="msg-hero">
-
-      🔥 Tu es inscrit(e) ! On te prévient dès le lancement. Que l'aurore te trouve prêt(e).
-
-    </div>
-
+    <p class="form-note"><strong>0 spam.</strong> Juste une notification le jour du lancement. Gratuit.</p>
+    <div class="success-box" id="succ-hero">🔥 Tu es inscrit(e) ! On te prévient dès le lancement. Que l'aurore te trouve prêt(e).</div>
+    <div class="error-box" id="err-hero"></div>
   </div>
-
 </section>
 
+<!-- ═══ VERSET ═══ -->
 
-
-<!-- ═══════════════ VERSE ═══════════════ -->
-
-
-
-<div class="verse-banner fade-up">
-
+<div class="verse-banner reveal">
   <p class="verse-text">"Je devance l'aurore et je crie ; j'espère en Tes promesses. Je devance les veilles et j'ouvre les yeux, pour méditer Ta Parole."</p>
-
   <p class="verse-ref">Psaume 119 : 147-148</p>
-
 </div>
 
-
-
-<!-- ═══════════════ FEATURES ═══════════════ -->
-
-
+<!-- ═══ FEATURES ═══ -->
 
 <div class="section">
-
   <p class="section-label">Ce que tu vas vivre</p>
-
-  <h2 class="section-title fade-up">Un rituel complet.<br>Chaque matin. Sans exception.</h2>
-
-
+  <h2 class="section-title reveal">Un rituel complet.<br>Chaque matin. Sans exception.</h2>
 
   <div class="features-grid">
-
-    <div class="feature-card gold fade-up">
-
-      <div class="feat-icon gold">🌅</div>
-
+    <div class="feat-card g reveal reveal-d1">
+      <div class="feat-icon g">🌅</div>
       <h3 class="feat-title">Lever précis à la seconde</h3>
-
       <p class="feat-desc">GPS + calcul astronomique. Tu sais exactement quand le soleil va se lever là où tu es, et dans quelle direction te tourner pour l'accueillir.</p>
-
     </div>
-
-
-
-```
-
-<div class="feature-card rose fade-up">
-
-  <div class="feat-icon rose">⚔️</div>
-
-  <h3 class="feat-title">Prière de renversement</h3>
-
-  <p class="feat-desc">1h avant le lever, prends autorité sur tout ce qui a été semé dans la nuit. Basé sur Job 38:12-13 — Dieu lui-même commande au matin.</p>
-
-  <p class="feat-verse">Job 38:12 — "As-tu commandé au matin ?"</p>
-
-</div>
-
-
-
-<div class="feature-card gold fade-up">
-
-  <div class="feat-icon gold">📢</div>
-
-  <h3 class="feat-title">Déclarations à voix haute</h3>
-
-  <p class="feat-desc">Prophétise ta journée. 5 à 7 déclarations personnalisables sur ta vie, ta famille, tes finances. La mort et la vie sont au pouvoir de ta langue.</p>
-
-  <p class="feat-verse">Proverbes 18:21</p>
-
-</div>
-
-
-
-<div class="feature-card rose fade-up">
-
-  <div class="feat-icon rose">🧭</div>
-
-  <h3 class="feat-title">Boussole de l'aurore</h3>
-
-  <p class="feat-desc">La direction exacte du lever en azimut, mise à jour chaque jour. Tourne-toi vers l'Est et laisse les premiers rayons toucher ton visage.</p>
-
-</div>
-
-
-
-<div class="feature-card gold fade-up">
-
-  <div class="feat-icon gold">✍️</div>
-
-  <h3 class="feat-title">Journal de l'aube</h3>
-
-  <p class="feat-desc">Une phrase chaque matin : "Aujourd'hui je déclare que…" Sauvegardée, relisible, gravée dans ton histoire spirituelle.</p>
-
-</div>
-
-
-
-<div class="feature-card rose fade-up">
-
-  <div class="feat-icon rose">🔥</div>
-
-  <h3 class="feat-title">Streak de fidélité</h3>
-
-  <p class="feat-desc">Ta flamme spirituelle : le compteur de levers consécutifs. Chaque matin compte. Chaque aurore honorée s'ajoute à ta chaîne de foi.</p>
-
-</div>
-
-```
-
-
-
-  </div>
-
-</div>
-
-
-
-<!-- ═══════════════ ALARMES ═══════════════ -->
-
-
-
-<div class="alarms-section">
-
-  <div style="text-align:center;margin-bottom:40px;">
-
-    <p class="section-label">Les 3 alarmes spirituelles</p>
-
-    <h2 class="section-title fade-up" style="margin-bottom:0;">Chaque étape a son heure.<br>Chaque heure a son arme.</h2>
-
-  </div>
-
-
-
-  <div class="alarm-cards">
-
-    <div class="alarm-card fade-up">
-
-      <div class="alarm-dot" style="background:#EF4444;"></div>
-
-      <div class="alarm-time" style="color:#EF4444;">05:42</div>
-
-      <div class="alarm-info">
-
-        <div class="alarm-name">🔴 Renverser</div>
-
-        <div class="alarm-verse">"As-tu commandé au matin ?" — Job 38:12</div>
-
-      </div>
-
-      <div class="alarm-badge" style="color:#EF4444;border-color:rgba(239,68,68,0.3);">1h avant</div>
-
+    <div class="feat-card r reveal reveal-d2">
+      <div class="feat-icon r">⚔️</div>
+      <h3 class="feat-title">Prière de renversement</h3>
+      <p class="feat-desc">1h avant le lever, prends autorité sur tout ce qui a été semé dans la nuit. Basé sur Job 38:12-13 — Dieu lui-même commande au matin.</p>
+      <p class="feat-verse">Job 38:12 — "As-tu commandé au matin ?"</p>
     </div>
-
-
-
-```
-
-<div class="alarm-card fade-up">
-
-  <div class="alarm-dot" style="background:var(--gold);"></div>
-
-  <div class="alarm-time" style="color:var(--gold);">06:12</div>
-
-  <div class="alarm-info">
-
-    <div class="alarm-name">🟡 Préparer</div>
-
-    <div class="alarm-verse">"La vie est au pouvoir de la langue." — Prov. 18:21</div>
-
-  </div>
-
-  <div class="alarm-badge" style="color:var(--gold);border-color:var(--gold-border);">30 min avant</div>
-
-</div>
-
-
-
-<div class="alarm-card fade-up">
-
-  <div class="alarm-dot" style="background:#22C55E;"></div>
-
-  <div class="alarm-time" style="color:#22C55E;">06:27</div>
-
-  <div class="alarm-info">
-
-    <div class="alarm-name">🟢 Accueillir</div>
-
-    <div class="alarm-verse">"Je devance l'aurore et je crie." — Ps. 119:147</div>
-
-  </div>
-
-  <div class="alarm-badge" style="color:#22C55E;border-color:rgba(34,197,94,0.3);">15 min avant</div>
-
-</div>
-
-
-
-<div style="text-align:center;margin-top:20px;font-size:12px;color:var(--muted);font-style:italic;">
-
-  ✦ Les heures s'ajustent automatiquement chaque jour selon ta position GPS
-
-</div>
-
-```
-
-
-
-  </div>
-
-</div>
-
-
-
-<!-- ═══════════════ WORLDWIDE ═══════════════ -->
-
-
-
-<div class="world-section fade-up">
-
-  <p class="section-label">Une app universelle</p>
-
-  <h2 class="section-title">Partout où le soleil se lève,<br>la foi peut prendre autorité.</h2>
-
-
-
-  <div class="counter-wrap">
-
-    <div class="counter-item">
-
-      <div class="counter-num">50M+</div>
-
-      <div class="counter-label">Croyants francophones</div>
-
+    <div class="feat-card g reveal reveal-d3">
+      <div class="feat-icon g">📢</div>
+      <h3 class="feat-title">Déclarations à voix haute</h3>
+      <p class="feat-desc">Prophétise ta journée. 5 à 7 déclarations personnalisables sur ta vie, ta famille, tes finances. La mort et la vie sont au pouvoir de ta langue.</p>
+      <p class="feat-verse">Proverbes 18:21</p>
     </div>
-
-    <div class="counter-item">
-
-      <div class="counter-num">3</div>
-
-      <div class="counter-label">Langues prévues</div>
-
+    <div class="feat-card r reveal reveal-d1">
+      <div class="feat-icon r">🧭</div>
+      <h3 class="feat-title">Boussole de l'aurore</h3>
+      <p class="feat-desc">La direction exacte du lever en azimut, mise à jour chaque jour. Tourne-toi vers l'Est et laisse les premiers rayons toucher ton visage.</p>
     </div>
-
-    <div class="counter-item">
-
-      <div class="counter-num">365</div>
-
-      <div class="counter-label">Versets thématiques</div>
-
+    <div class="feat-card g reveal reveal-d2">
+      <div class="feat-icon g">✍️</div>
+      <h3 class="feat-title">Journal de l'aube</h3>
+      <p class="feat-desc">Une phrase chaque matin : "Aujourd'hui je déclare que…" Sauvegardée, relisible, gravée dans ton histoire spirituelle.</p>
     </div>
-
+    <div class="feat-card r reveal reveal-d3">
+      <div class="feat-icon r">🔥</div>
+      <h3 class="feat-title">Streak de fidélité</h3>
+      <p class="feat-desc">Ta flamme spirituelle : le compteur de levers consécutifs. Chaque matin compte. Chaque aurore honorée s'ajoute à ta chaîne de foi.</p>
+    </div>
   </div>
-
-
-
-  <div class="regions">
-
-    <div class="region-tag">🇫🇷 France <span class="region-count">5M+</span></div>
-
-    <div class="region-tag">🇨🇮 Côte d'Ivoire <span class="region-count">12M+</span></div>
-
-    <div class="region-tag">🇨🇲 Cameroun <span class="region-count">8M+</span></div>
-
-    <div class="region-tag">🇨🇩 Congo <span class="region-count">6M+</span></div>
-
-    <div class="region-tag">🇸🇳 Sénégal <span class="region-count">2M+</span></div>
-
-    <div class="region-tag">🇧🇷 Brésil (PT) <span class="region-count">60M+</span></div>
-
-    <div class="region-tag">🇺🇸 USA (EN) <span class="region-count">40M+</span></div>
-
-    <div class="region-tag">🇬🇵 Antilles <span class="region-count">1M+</span></div>
-
-  </div>
-
 </div>
 
+<!-- ═══ THÉOLOGIQUE ═══ -->
 
-
-<!-- ═══════════════ FINAL CTA ═══════════════ -->
-
-
-
-<section class="final-cta">
-
-  <div class="final-cta-bg"></div>
-
-  <div class="cta-box">
-
-    <h2 class="cta-title fade-up">
-
-      Ton aurore t'attend.<br>
-
-      <span style="background:linear-gradient(135deg,var(--gold-light),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Sois prêt(e) dès le lancement.</span>
-
-    </h2>
-
-    <p class="cta-sub fade-up">
-
-      Rejoins les premiers croyants qui vont transformer leur réveil en acte de foi.
-
-      Une notification au lancement — c'est tout.
-
+<div class="theo-wrap">
+  <div class="theo-box reveal">
+    <div class="theo-badge">✝ Fondement biblique · Clarification théologique</div>
+    <h2 class="theo-title">On ne prie pas <em>le</em> soleil.<br>On prie <em>à l'heure</em> du soleil.</h2>
+    <p class="theo-body">
+      Le soleil dans <strong>Prends Autorité</strong> n'est pas un objet de culte — c'est une <strong>horloge créée par Dieu</strong> lui-même. Dès la Genèse, Dieu a placé les luminaires dans le ciel précisément pour servir de <strong>signes et de repères dans le temps</strong>. Notre prière est adressée au <strong>Père céleste</strong>, au nom de Jésus-Christ, dans la puissance du Saint-Esprit. Le lever du soleil est simplement le signal — la création qui nous rappelle que <em>les miséricordes de l'Éternel sont nouvelles chaque matin.</em>
     </p>
-
-
-
-```
-
-<div class="form-wrap fade-up">
-
-  <div class="form-inner">
-
-    <input type="email" id="email-cta" placeholder="ton@email.com" />
-
-    <button onclick="submitEmail('email-cta', 'msg-cta')">Rejoindre la liste →</button>
-
+    <div class="theo-verse">
+      <p>"Dieu dit : Qu'il y ait des luminaires dans l'étendue du ciel, pour séparer le jour d'avec la nuit ; que ce soient des signes pour marquer les époques, les jours et les années."</p>
+      <span>Genèse 1 : 14 — La création du soleil comme signe, non comme dieu</span>
+    </div>
+    <div class="theo-divider"></div>
+    <div class="theo-pillars">
+      <div class="pillar">
+        <div class="pillar-icon">📖</div>
+        <div class="pillar-title">Ancrage biblique</div>
+        <div class="pillar-text">Chaque alarme est fondée sur un verset précis des Écritures — Job, les Psaumes, les Proverbes. L'aurore est le décor, la Parole est la substance.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">✝️</div>
+        <div class="pillar-title">Foi chrétienne uniquement</div>
+        <div class="pillar-text">Prière au Père, au nom de Jésus. Aucun syncrétisme, aucun rituel solaire. Le soleil indique l'heure — Dieu reçoit la gloire.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🕊️</div>
+        <div class="pillar-title">Tradition prophétique</div>
+        <div class="pillar-text">David, Daniel, les prophètes priaient tôt le matin. "Je te cherche dès l'aurore" (Ps. 63:1). C'est une pratique biblique, pas un emprunt à d'autres traditions.</div>
+      </div>
+    </div>
+    <div class="theo-verse">
+      <p>"Les bontés de l'Éternel ne sont pas épuisées, ses compassions ne cessent point. Elles se renouvellent chaque matin."</p>
+      <span>Lamentations 3 : 22-23 — Le matin comme renouvellement de la grâce divine</span>
+    </div>
   </div>
-
-  <div class="success-msg" id="msg-cta">
-
-    ✦ Tu es sur la liste ! Que chaque aurore te trouve debout et en autorité. 🌅
-
-  </div>
-
 </div>
 
+<!-- ═══ ALARMES ═══ -->
 
-
-<p class="form-note" style="margin-top:16px;text-align:center;">
-
-  <span>Gratuit · Sans spam · Résiliation en un clic</span>
-
-</p>
-
-```
-
-
-
+<div class="alarms-wrap">
+  <div style="text-align:center;margin-bottom:48px;">
+    <p class="section-label">Les 3 alarmes spirituelles</p>
+    <h2 class="section-title reveal" style="margin-bottom:0;">Chaque étape a son heure.<br>Chaque heure a son arme.</h2>
   </div>
+  <div class="alarm-list">
+    <div class="alarm-card reveal">
+      <div class="alarm-dot" style="background:var(--red);"></div>
+      <div class="alarm-time" style="color:var(--red);">05:42</div>
+      <div class="alarm-info">
+        <div class="alarm-name">🔴 Renverser</div>
+        <div class="alarm-sub">"As-tu commandé au matin ?" — Job 38:12</div>
+      </div>
+      <div class="alarm-badge" style="color:var(--red);border-color:rgba(239,68,68,0.32);">1h avant</div>
+    </div>
+    <div class="alarm-card reveal reveal-d1">
+      <div class="alarm-dot" style="background:var(--gold);"></div>
+      <div class="alarm-time" style="color:var(--gold);">06:12</div>
+      <div class="alarm-info">
+        <div class="alarm-name">🟡 Préparer</div>
+        <div class="alarm-sub">"La vie est au pouvoir de la langue." — Prov. 18:21</div>
+      </div>
+      <div class="alarm-badge" style="color:var(--gold);border-color:var(--gold-b);">30 min avant</div>
+    </div>
+    <div class="alarm-card reveal reveal-d2">
+      <div class="alarm-dot" style="background:var(--green);"></div>
+      <div class="alarm-time" style="color:var(--green);">06:27</div>
+      <div class="alarm-info">
+        <div class="alarm-name">🟢 Accueillir</div>
+        <div class="alarm-sub">"Je devance l'aurore et je crie." — Ps. 119:147</div>
+      </div>
+      <div class="alarm-badge" style="color:var(--green);border-color:rgba(34,197,94,0.32);">15 min avant</div>
+    </div>
+    <p class="alarm-note reveal reveal-d3">✦ Les heures s'ajustent automatiquement chaque jour selon ta position GPS</p>
+  </div>
+</div>
 
+<!-- ═══ WORLDWIDE ═══ -->
+
+<div class="world-wrap reveal">
+  <p class="section-label">Une app universelle</p>
+  <h2 class="section-title">Partout où le soleil se lève,<br>la foi peut prendre autorité.</h2>
+  <div class="counters">
+    <div class="counter"><div class="counter-num">50M+</div><div class="counter-label">Croyants francophones</div></div>
+    <div class="counter"><div class="counter-num">3</div><div class="counter-label">Langues prévues</div></div>
+    <div class="counter"><div class="counter-num">365</div><div class="counter-label">Versets thématiques</div></div>
+  </div>
+  <div class="regions">
+    <div class="region">🇫🇷 France <span class="region-count">5M+</span></div>
+    <div class="region">🇨🇮 Côte d'Ivoire <span class="region-count">12M+</span></div>
+    <div class="region">🇨🇲 Cameroun <span class="region-count">8M+</span></div>
+    <div class="region">🇨🇩 Congo <span class="region-count">6M+</span></div>
+    <div class="region">🇸🇳 Sénégal <span class="region-count">2M+</span></div>
+    <div class="region">🇧🇷 Brésil (PT) <span class="region-count">60M+</span></div>
+    <div class="region">🇺🇸 USA (EN) <span class="region-count">40M+</span></div>
+    <div class="region">🇬🇵 Antilles <span class="region-count">1M+</span></div>
+  </div>
+</div>
+
+<!-- ═══ FINAL CTA ═══ -->
+
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-inner">
+    <h2 class="cta-title reveal">
+      Ton aurore t'attend.<br>
+      <span class="sub-grad">Sois prêt(e) dès le lancement.</span>
+    </h2>
+    <p class="cta-sub reveal">Rejoins les premiers croyants qui vont transformer leur réveil en acte de foi. Une notification au lancement — c'est tout.</p>
+    <div class="form-outer reveal">
+      <div class="form-box">
+        <input type="email" id="email-cta" placeholder="ton@email.com" autocomplete="email" />
+        <button class="form-btn" onclick="subscribe('email-cta','succ-cta','err-cta',this)">Rejoindre la liste →</button>
+      </div>
+      <p class="form-note" style="margin-top:14px;"><strong>Gratuit · Sans spam · Résiliation en un clic</strong></p>
+      <div class="success-box" id="succ-cta">✦ Tu es sur la liste ! Que chaque aurore te trouve debout et en autorité. 🌅</div>
+      <div class="error-box" id="err-cta"></div>
+    </div>
+  </div>
 </section>
 
-
-
-<!-- ═══════════════ FOOTER ═══════════════ -->
-
-
+<!-- ═══ FOOTER ═══ -->
 
 <footer>
-
-  <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;margin-bottom:8px;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">✦ Prends Autorité</div>
-
+  <div class="footer-logo">✦ Prends Autorité</div>
   <span>© 2025 Prends Autorité · Fait avec foi et intention · </span>
-
   <span style="color:var(--gold);">Job 38:12</span>
-
 </footer>
 
-
-
 <script>
-
-  // ── Stars ──
-
-  const starsEl = document.getElementById('stars');
-
-  for (let i = 0; i < 40; i++) {
-
+/* ── STARS ── */
+(function() {
+  const el = document.getElementById('stars');
+  for (let i = 0; i < 45; i++) {
     const s = document.createElement('div');
-
     s.className = 'star';
-
-    const size = Math.random() < 0.2 ? 3 : 2;
-
-    const opFrom = 0.05 + Math.random() * 0.15;
-
-    const opTo   = opFrom + 0.1 + Math.random() * 0.1;
-
-    const dur    = 2 + Math.random() * 4;
-
-    s.style.cssText = `
-
-      left:${Math.random()*100}%;
-
-      top:${Math.random()*70}%;
-
-      width:${size}px; height:${size}px;
-
-      --op-from:${opFrom}; --op-to:${opTo};
-
-      --dur:${dur}s;
-
-      animation-delay:${Math.random()*4}s;
-
-    `;
-
-    starsEl.appendChild(s);
-
+    const sz = Math.random() < 0.18 ? 3 : 2;
+    const alpha = 0.06 + Math.random() * 0.18;
+    const dur = (2.5 + Math.random() * 4).toFixed(2);
+    const delay = (Math.random() * 5).toFixed(2);
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*72}%;width:${sz}px;height:${sz}px;--a:${alpha};--d:${dur}s;--delay:${delay}s;`;
+    el.appendChild(s);
   }
+})();
 
-
-
-  // ── Sun rays ──
-
-  const raysEl = document.getElementById('rays');
-
-  for (let i = 0; i < 12; i++) {
-
+/* ── RAYS ── */
+(function() {
+  const el = document.getElementById('rays');
+  for (let i = 0; i < 14; i++) {
     const r = document.createElement('div');
-
     r.className = 'ray';
-
-    const angle = (i / 12) * 360;
-
-    const len = 20 + Math.random() * 15;
-
-    r.style.cssText = `
-
-      transform: rotate(${angle}deg);
-
-      height: ${len}px;
-
-      margin-left: -1px;
-
-      opacity: ${0.15 + Math.random() * 0.15};
-
-    `;
-
-    raysEl.appendChild(r);
-
+    const angle = (i / 14) * 360;
+    const len = 22 + Math.random() * 18;
+    r.style.cssText = `transform:rotate(${angle}deg);height:${len}px;margin-left:-1px;opacity:${(0.12+Math.random()*0.18).toFixed(2)};`;
+    el.appendChild(r);
   }
+})();
 
+/* ── REVEAL ON SCROLL ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+/* ── KLAVIYO SUBSCRIBE ── */
+const KLAVIYO_KEY = 'QWgzyd';
+const KLAVIYO_LIST = 'TpCKEi';
 
-  // ── Fade-up on scroll ──
+async function subscribe(inputId, succId, errId, btn) {
+  const input = document.getElementById(inputId);
+  const succ  = document.getElementById(succId);
+  const err   = document.getElementById(errId);
+  const email = input.value.trim();
 
-  const observer = new IntersectionObserver(entries => {
+  // Hide previous messages
+  succ.classList.remove('show');
+  err.classList.remove('show');
 
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    input.style.outline = '2px solid var(--rose)';
+    input.focus();
+    return;
+  }
+  input.style.outline = '';
 
-  }, { threshold: 0.15 });
+  const orig = btn.textContent;
+  btn.textContent = '⏳ Inscription...';
+  btn.disabled = true;
 
+  try {
+    const res = await fetch(
+      `https://a.klaviyo.com/client/subscriptions/?company_id=${KLAVIYO_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'revision': '2023-02-22'
+        },
+        body: JSON.stringify({
+          data: {
+            type: 'subscription',
+            attributes: {
+              list_id: KLAVIYO_LIST,
+              email: email,
+              custom_source: 'Landing Page Prends Autorité'
+            }
+          }
+        })
+      }
+    );
 
-
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-
-
-  // ── Email submit ──
-
-  function submitEmail(inputId, msgId) {
-
-    const input = document.getElementById(inputId);
-
-    const msg   = document.getElementById(msgId);
-
-    const email = input.value.trim();
-
-
-
-    if (!email || !email.includes('@')) {
-
-      input.style.borderBottom = '2px solid var(--rose)';
-
-      input.focus();
-
-      return;
-
+    if (res.ok || res.status === 202) {
+      input.value = '';
+      succ.classList.add('show');
+      setTimeout(() => succ.classList.remove('show'), 9000);
+    } else {
+      const body = await res.text();
+      throw new Error(`Klaviyo ${res.status}: ${body}`);
     }
-
-
-
-    // Ici tu brancheras ton service (Mailchimp, ConvertKit, Brevo, etc.)
-
-    console.log('Email inscrit :', email);
-
-
-
-    input.value = '';
-
-    msg.classList.add('show');
-
-
-
-    setTimeout(() => msg.classList.remove('show'), 8000);
-
+  } catch (e) {
+    console.error(e);
+    err.textContent = 'Une erreur est survenue. Vérifie ta connexion et réessaie.';
+    err.classList.add('show');
+    setTimeout(() => err.classList.remove('show'), 6000);
   }
 
+  btn.textContent = orig;
+  btn.disabled = false;
+}
 </script>
 
-
-
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
